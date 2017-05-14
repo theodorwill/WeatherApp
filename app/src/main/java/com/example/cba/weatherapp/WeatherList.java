@@ -94,8 +94,6 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String sSelected=parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, sSelected, Toast.LENGTH_SHORT).show();
 
         switch(position){
             case cityA:

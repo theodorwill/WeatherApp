@@ -103,6 +103,5 @@ public class YahooWeatherService {
         public LocationWeatherException(String detailMessage){
             super(detailMessage);
         }
-
     }
 }
