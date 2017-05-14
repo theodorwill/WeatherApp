@@ -80,7 +80,8 @@ public class YahooWeatherService {
                     int count = queryResults.optInt("count");
 
                     if(count == 0 ){
-                        callback.serviceFailure(new LocationWeatherException("No weather information found for " + location));
+                        callback.serviceFailure(new LocationWeatherException(
+                                "Error, please refresh."));
                         return;
                     }
 
