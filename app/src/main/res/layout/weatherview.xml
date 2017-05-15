@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,37 +12,33 @@
         android:id="@+id/locationText"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:text="@string/location"
         android:textAlignment="center"
         android:textSize="28sp"
-        android:layout_marginTop="104dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#fafafa"/>
+        android:layout_marginTop="53dp"
+        android:textColor="#fafafa"
+        android:layout_below="@+id/cityName"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/conditionText"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:text="@string/condition"
         android:textAlignment="center"
         android:textSize="22sp"
-        android:layout_marginBottom="44dp"
-        android:layout_above="@+id/temperatureText"
-        android:layout_alignParentStart="true"
-        android:textColor="#fafafa"/>
+        android:textColor="#fafafa"
+        android:layout_below="@+id/weatherImage"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/temperatureText"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="@string/temperature"
         android:textAlignment="center"
         android:textSize="60sp"
-        android:layout_marginBottom="16dp"
-        android:layout_above="@+id/imageView"
+        android:textColor="#fafafa"
+        android:layout_below="@+id/weatherImage"
         android:layout_alignParentStart="true"
-        android:textColor="#fafafa"/>
+        android:layout_marginTop="29dp" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -66,7 +63,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Refresh"
-        android:layout_above="@+id/temperatureText"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/temperatureText"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/weatherImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/locationText"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

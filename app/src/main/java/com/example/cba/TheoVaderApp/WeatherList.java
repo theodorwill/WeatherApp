@@ -2,12 +2,15 @@ package com.example.cba.TheoVaderApp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private TextView locationTextView;
     private Button refreshCity;
     private Spinner citySelection;
+    private ImageView weatherIconImageView;
     private final int cityA = 0;
     private final int cityB = 1;
     private final int cityC = 2;
@@ -38,11 +42,12 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weatherview);
 
+        weatherIconImageView = (ImageView)findViewById(R.id.weatherImage);
         temperatureTextView = (TextView)findViewById(R.id.temperatureText);
         conditionTextView = (TextView)findViewById(R.id.conditionText);
         locationTextView = (TextView)findViewById(R.id.locationText);
-        citySelection = (Spinner) findViewById(R.id.cityName);
-        refreshCity = (Button) findViewById(R.id.refreshButton);
+        citySelection = (Spinner)findViewById(R.id.cityName);
+        refreshCity = (Button)findViewById(R.id.refreshButton);
 
         service = new YahooWeatherService(this);
         dialog = new ProgressDialog(this);
@@ -73,17 +78,23 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         Item item = channel.getItem();
 
-        int resource = getResources().getIdentifier(
-                "drawable/icon" +
-                        channel.getItem().getCondition().getCode(), null, getPackageName());
+        int resourceId = getResources().getIdentifier("drawable/icon_" +
+                 channel.getItem().getCondition().getCode(), null, getPackageName());
 
 
-                temperatureTextView.setText(item.getCondition().getTemperature()+"\u00B0"+
+        @SuppressWarnings("deprecation")
+        Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
+
+        weatherIconImageView.setImageDrawable(weatherIconDrawable);
+
+        temperatureTextView.setText(item.getCondition().getTemperature()+"\u00B0"+
                         channel.getUnits().getTemperature());
 
-                conditionTextView.setText(item.getCondition().getDescription());
+        conditionTextView.setText(item.getCondition().getDescription());
 
-                locationTextView.setText(service.getLocation());
+        locationTextView.setText(service.getLocation());
+
+
     }
 
     @Override
