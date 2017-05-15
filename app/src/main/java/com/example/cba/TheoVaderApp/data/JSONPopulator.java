@@ -1,4 +1,4 @@
-package com.example.cba.weatherapp.data;
+package com.example.cba.TheoVaderApp.data;
 
 import org.json.JSONObject;
 

@@ -1,6 +1,6 @@
-package com.example.cba.weatherapp.service;
+package com.example.cba.TheoVaderApp.service;
 
-import com.example.cba.weatherapp.data.Channel;
+import com.example.cba.TheoVaderApp.data.Channel;
 
 /**
  * Created by cba on 2017-05-08.

@@ -1,4 +1,4 @@
-package com.example.cba.weatherapp;
+package com.example.cba.TheoVaderApp;
 
 import org.junit.Test;
 

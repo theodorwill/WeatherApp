@@ -1,4 +1,4 @@
-package com.example.cba.weatherapp;
+package com.example.cba.TheoVaderApp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,10 +12,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cba.weatherapp.data.Channel;
-import com.example.cba.weatherapp.data.Item;
-import com.example.cba.weatherapp.service.WeatherServiceCallback;
-import com.example.cba.weatherapp.service.YahooWeatherService;
+import com.example.cba.TheoVaderApp.data.Channel;
+import com.example.cba.TheoVaderApp.data.Item;
+import com.example.cba.TheoVaderApp.service.WeatherServiceCallback;
+import com.example.cba.TheoVaderApp.service.YahooWeatherService;
 
 public class WeatherList extends Activity implements WeatherServiceCallback, AdapterView.OnItemSelectedListener{
 

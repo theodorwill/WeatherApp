@@ -1,4 +1,4 @@
-package com.example.cba.weatherapp;
+package com.example.cba.TheoVaderApp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

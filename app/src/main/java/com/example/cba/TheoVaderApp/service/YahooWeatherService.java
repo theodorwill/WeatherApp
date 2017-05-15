@@ -1,8 +1,8 @@
-package com.example.cba.weatherapp.service;
+package com.example.cba.TheoVaderApp.service;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import com.example.cba.weatherapp.data.Channel;
+import com.example.cba.TheoVaderApp.data.Channel;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
