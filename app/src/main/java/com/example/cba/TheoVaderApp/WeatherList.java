@@ -84,6 +84,8 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     public void serviceSuccess(Channel channel) {
         dialog.hide();
 
+        Long tsLong = System.currentTimeMillis()/(1000*60*60)%24;
+
         Item item = channel.getItem();
 
         int resourceId = getResources().getIdentifier("drawable/icon_" +
@@ -103,11 +105,14 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         locationTextView.setText(service.getLocation());
 
-        if (temp >= 10){
+        if (temp >= 10 && tsLong < 19){
             currLay.setBackgroundColor(Color.rgb(255, 193, 7));
         }
-        else if (temp < 10){
+        else if (temp < 10 && tsLong < 19){
             currLay.setBackgroundColor(Color.rgb(3, 169, 244));
+        }
+        else if (tsLong >= 19){
+            currLay.setBackgroundColor(Color.rgb(63, 81, 181));
         }
     }
 
