@@ -105,16 +105,13 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         locationTextView.setText(service.getLocation());
 
-        if (temp >= 10 && tsLong < 19){
+        if (temp >= 10 && tsLong < 19 && tsLong > 5){
             currLay.setBackgroundColor(Color.rgb(255, 193, 7));
         }
-        else if (temp < 10 && tsLong < 19){
+        else if (temp < 10 && tsLong < 19 && tsLong > 5){
             currLay.setBackgroundColor(Color.rgb(3, 169, 244));
         }
-        else if (tsLong >= 19){
-            currLay.setBackgroundColor(Color.rgb(63, 81, 181));
-        }
-        else if (tsLong <= 5){
+        else if (tsLong >= 19 || tsLong <=5){
             currLay.setBackgroundColor(Color.rgb(63, 81, 181));
         }
     }
