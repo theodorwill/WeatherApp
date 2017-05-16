@@ -2,15 +2,19 @@ package com.example.cba.TheoVaderApp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +23,9 @@ import com.example.cba.TheoVaderApp.data.Channel;
 import com.example.cba.TheoVaderApp.data.Item;
 import com.example.cba.TheoVaderApp.service.WeatherServiceCallback;
 import com.example.cba.TheoVaderApp.service.YahooWeatherService;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class WeatherList extends Activity implements WeatherServiceCallback, AdapterView.OnItemSelectedListener{
 
@@ -33,6 +40,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private final int cityC = 2;
     private final int cityD = 3;
     private final Handler handler = new Handler();
+    private RelativeLayout currLay;
 
     private YahooWeatherService service;
     private ProgressDialog dialog;
@@ -48,7 +56,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         locationTextView = (TextView)findViewById(R.id.locationText);
         citySelection = (Spinner)findViewById(R.id.cityName);
         refreshCity = (Button)findViewById(R.id.refreshButton);
-
+        currLay = (RelativeLayout)findViewById(R.id.relLay);
         service = new YahooWeatherService(this);
         dialog = new ProgressDialog(this);
         dialog.setMessage("Loading...");
@@ -81,6 +89,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         int resourceId = getResources().getIdentifier("drawable/icon_" +
                  channel.getItem().getCondition().getCode(), null, getPackageName());
 
+        int temp = item.getCondition().getTemperature();
 
         @SuppressWarnings("deprecation")
         Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
@@ -94,7 +103,12 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         locationTextView.setText(service.getLocation());
 
-
+        if (temp >= 10){
+            currLay.setBackgroundColor(Color.rgb(255, 193, 7));
+        }
+        else if (temp < 10){
+            currLay.setBackgroundColor(Color.rgb(3, 169, 244));
+        }
     }
 
     @Override

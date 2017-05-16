@@ -83,6 +83,7 @@ public class YahooWeatherService {
                         callback.serviceFailure(new LocationWeatherException(
                                 "Error, please refresh."));
                         return;
+
                     }
 
                     Channel channel = new Channel();
