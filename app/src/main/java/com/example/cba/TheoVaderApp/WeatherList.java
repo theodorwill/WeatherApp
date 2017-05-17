@@ -1,13 +1,17 @@
 package com.example.cba.TheoVaderApp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,8 +41,6 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private int currentCity = 0;
     private final Handler handler = new Handler();
     private RelativeLayout currLay;
-    private Animation animRotate;
-
     private YahooWeatherService service;
     private ProgressDialog dialog;
 
@@ -56,7 +58,6 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         currLay = (RelativeLayout)findViewById(R.id.relLay);
         service = new YahooWeatherService(this);
         dialog = new ProgressDialog(this);
-        dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.setMessage("Loading...");
         dialog.show();
@@ -77,6 +78,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
                 refreshCurrent();
             }
         });
+
     }
 
     @Override
@@ -118,6 +120,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     @Override
     public void serviceFailure(Exception exception) {
         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+        networkCheck();
         return;
     }
 
@@ -164,6 +167,43 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         }
         else if (currentCity == 3){
             service.refreshWeather("Kiruna, Sweden");
+        }
+    }
+
+    private boolean isNetworkAvailable(){
+        ConnectivityManager connectivityManager=(ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo=connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo !=null;
+    }
+
+    private void networkAlert(){
+        AlertDialog.Builder checkWindow = new  AlertDialog.Builder(WeatherList.this);
+
+        checkWindow.setTitle("Error!");
+        checkWindow.setMessage("No internet Connection found!");
+        checkWindow.setCancelable(false);
+
+        checkWindow.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                refreshCurrent();
+            }
+        });
+
+        checkWindow.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        checkWindow.show();
+    }
+
+    private void networkCheck(){
+        if(isNetworkAvailable()){
+            return;
+        }else if(!isNetworkAvailable()){
+            networkAlert();
         }
     }
 
