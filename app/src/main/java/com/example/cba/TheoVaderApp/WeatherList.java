@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Handler;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.format.DateFormat;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,9 +22,6 @@ import com.example.cba.TheoVaderApp.data.Channel;
 import com.example.cba.TheoVaderApp.data.Item;
 import com.example.cba.TheoVaderApp.service.WeatherServiceCallback;
 import com.example.cba.TheoVaderApp.service.YahooWeatherService;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class WeatherList extends Activity implements WeatherServiceCallback, AdapterView.OnItemSelectedListener{
 
@@ -41,6 +37,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private final int cityD = 3;
     private final Handler handler = new Handler();
     private RelativeLayout currLay;
+    private Animation animRotate;
 
     private YahooWeatherService service;
     private ProgressDialog dialog;
@@ -59,6 +56,8 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         currLay = (RelativeLayout)findViewById(R.id.relLay);
         service = new YahooWeatherService(this);
         dialog = new ProgressDialog(this);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         dialog.setMessage("Loading...");
         dialog.show();
 
@@ -106,12 +105,12 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         locationTextView.setText(service.getLocation());
 
         if (temp >= 10 && tsLong < 19 && tsLong > 5){
-            currLay.setBackgroundColor(Color.rgb(255, 193, 7));
+            currLay.setBackgroundColor(Color.rgb(255, 152, 0));
         }
         else if (temp < 10 && tsLong < 19 && tsLong > 5){
             currLay.setBackgroundColor(Color.rgb(3, 169, 244));
         }
-        else if (tsLong >= 19 || tsLong <=5){
+        else if (tsLong >= 19 || tsLong <= 5){
             currLay.setBackgroundColor(Color.rgb(63, 81, 181));
         }
     }
@@ -119,7 +118,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     @Override
     public void serviceFailure(Exception exception) {
         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
-        dialog.hide();
+        return;
     }
 
     @Override

@@ -1,132 +1,152 @@
 package com.example.cba.TheoVaderApp;
 
-/**
- * Created by cba on 2017-05-08.
- */
-
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 
-
-/**
- * Created by TW on 4/25/2017.
- */
-
-/**
- * Splashscreen som frågar efter Permissions om API lvl är 23+
- */
 
 public class SplashScreen extends Activity {
 
-    private int timeoutMillis = 5000;
+    private static int SPLASH_TIME_OUT = 3000;
+    private boolean InternetCheck=true;
+    private ProgressBar spinner;
+    AlertDialog.Builder internetAlert;
 
-    private long startTimeMillis = 0;
-
-    private static final int PERMISSIONS_REQUEST = 1234;
-
-    public int getTimeoutMillis() {
-        return timeoutMillis;
-    }
-
-    @SuppressWarnings("rawtypes")
-    public Class getNextActivityClass() {
-        return WeatherList.class;
-    }
-
-    public String[] getRequiredPermissions() {
-        String[] permissions = null;
-        try {
-            permissions = getPackageManager().getPackageInfo(getPackageName(),
-                    PackageManager.GET_PERMISSIONS).requestedPermissions;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (permissions == null) {
-            return new String[0];
-        } else {
-            return permissions.clone();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashscreen);
 
-        startTimeMillis = System.currentTimeMillis();
+        //progressBar
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            checkPermissions();
-        } else {
-            startNextActivity();
-        }
+        internetAlert = new AlertDialog.Builder(this);
+        PostDelayedMethod();
+
     }
 
-    @TargetApi(23)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            checkPermissions();
-        }
-    }
 
-    private void startNextActivity() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-        long delayMillis = getTimeoutMillis() - (System.currentTimeMillis() - startTimeMillis);
-        if (delayMillis < 0) {
-            delayMillis = 0;
-        }
+    public void PostDelayedMethod()
+    {
+
         new Handler().postDelayed(new Runnable() {
+
+
+            /*
+             * Showing splash screen with a timer. This will be useful when you
+             * want to show case your app logo / company
+             */
+
             @Override
             public void run() {
-                startActivity(new Intent(SplashScreen.this, getNextActivityClass()));
-                finish();
+
+                // This method will be executed once the timer is over
+                // Start your app main activity
+
+                boolean InternetResult = checkConnection();
+                if(InternetResult){
+
+                    //open Activity when internet is connected
+                    Intent intent=new Intent(SplashScreen.this,WeatherList.class);
+                    //     intent.addCategory(Intent.CATEGORY_HOME);
+                    //    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+
+                }
+                else {
+                    spinner.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.GONE);
+
+
+                    //Dialog Box show when internet is not connected
+                    DialogAppear();
+
+
+                }
             }
-        }, delayMillis);
+        }, SPLASH_TIME_OUT);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void checkPermissions() {
-        String[] ungrantedPermissions = requiredPermissionsStillNeeded();
-        if (ungrantedPermissions.length == 0) {
-            startNextActivity();
+
+    //DialogBox Main Function
+    public void DialogAppear()
+    {
+        AlertDialog.Builder meh = new AlertDialog.Builder(SplashScreen.this);
+
+        meh.setTitle("Network Error");   //Title
+        meh.setMessage("No Internet Connectivity");   //Message
+
+        meh.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //Check internet again when click on Retry by calling function
+
+                        //run is not working there due to runnable method
+                        // run();
+                        PostDelayedMethod();
+
+                    }
+                });
+
+
+        //Negative Message
+        meh.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                                    /* close this activity
+                                    *  When Exit is clicked
+                                    */
+                        finish();
+
+                    }
+                });
+
+        showDialog();
+    }
+
+    public void showDialog() {
+        internetAlert.show();
+    }
+
+
+    //Check Internet status of the mobile
+    protected boolean isOnline() {
+
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
         } else {
-            requestPermissions(ungrantedPermissions, PERMISSIONS_REQUEST);
+            return false;
         }
     }
 
-    @TargetApi(23)
-    private String[] requiredPermissionsStillNeeded() {
 
-        Set<String> permissions = new HashSet<String>();
-        for (String permission : getRequiredPermissions()) {
-            permissions.add(permission);
+    //Return Internet Status of the Mobile
+    public boolean checkConnection(){
+        if(isOnline()){
+            return InternetCheck;
+            //Toast.makeText(MainActivity.this, "You are connected to Internet", Toast.LENGTH_SHORT).show();
+        }else{
+            InternetCheck=false;
+            return InternetCheck;
+            // Toast.makeText(MainActivity.this, "You are not connected to Internet", Toast.LENGTH_SHORT).show();
+
         }
-        for (Iterator<String> i = permissions.iterator(); i.hasNext();) {
-            String permission = i.next();
-            if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(SplashScreen.class.getSimpleName(),
-                        "Permission: " + permission + " already granted.");
-                i.remove();
-            } else {
-                Log.d(SplashScreen.class.getSimpleName(),
-                        "Permission: " + permission + " not yet granted.");
-            }
-        }
-        return permissions.toArray(new String[permissions.size()]);
+
     }
 }
+
