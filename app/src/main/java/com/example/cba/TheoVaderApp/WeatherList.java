@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,6 +34,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private final int cityB = 1;
     private final int cityC = 2;
     private final int cityD = 3;
+    private int currentCity = 0;
     private final Handler handler = new Handler();
     private RelativeLayout currLay;
     private Animation animRotate;
@@ -74,7 +74,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         refreshCity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                recreate();
+                refreshCurrent();
             }
         });
     }
@@ -129,22 +129,41 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
                 dialog.setMessage("Loading...");
                 dialog.show();
                 service.refreshWeather("Stockholm, Sweden");
+                currentCity = 0;
                 break;
             case cityB:
                 dialog.setMessage("Loading...");
                 dialog.show();
                 service.refreshWeather("Gothenburg, Sweden");
+                currentCity = 1;
                 break;
             case cityC:
                 dialog.setMessage("Loading...");
                 dialog.show();
                 service.refreshWeather("Malmo, Sweden");
+                currentCity = 2;
                 break;
             case cityD:
                 dialog.setMessage("Loading...");
                 dialog.show();
                 service.refreshWeather("Kiruna, Sweden");
+                currentCity = 3;
                 break;
+        }
+    }
+
+    public void refreshCurrent(){
+        if (currentCity == 0){
+            service.refreshWeather("Stockholm, Sweden");
+        }
+        else if (currentCity == 1){
+            service.refreshWeather("Gothenburg, Sweden");
+        }
+        else if (currentCity == 2){
+            service.refreshWeather("Malmo, Sweden");
+        }
+        else if (currentCity == 3){
+            service.refreshWeather("Kiruna, Sweden");
         }
     }
 
