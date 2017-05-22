@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.cba.TheoVaderApp.data.Channel;
 import com.example.cba.TheoVaderApp.data.Item;
 import com.example.cba.TheoVaderApp.service.WeatherServiceCallback;
@@ -44,7 +44,8 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     private final Handler handler = new Handler();
     private RelativeLayout currLay;
     private YahooWeatherService service;
-    private ProgressDialog dialog;
+    private ProgressDialog pDialog;
+    private Toast errorToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,13 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         refreshCity = (Button)findViewById(R.id.refreshButton);
         currLay = (RelativeLayout)findViewById(R.id.relLay);
         service = new YahooWeatherService(this);
-        dialog = new ProgressDialog(this);
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading...");
-        dialog.show();
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(true);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        errorToast = Toast.makeText(getApplicationContext(),
+                "Connection failed.", Toast.LENGTH_SHORT);
 
         service.refreshWeather("Stockholm, Sweden");
 
@@ -78,7 +82,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         refreshCity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                dialog.show();
+                pDialog.show();
                 refreshCurrent();
             }
         });
@@ -86,7 +90,9 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
     @Override
     public void serviceSuccess(Channel channel) {
-        dialog.hide();
+
+        pDialog.hide();
+        errorToast.cancel();
 
         int tsInt = new Time(System.currentTimeMillis()).getHours();
         String ctString = java.text.DateFormat.getDateTimeInstance().format(new Date());
@@ -134,26 +140,26 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         switch(position){
             case cityA:
-                dialog.setMessage("Loading...");
-                dialog.show();
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 service.refreshWeather("Stockholm, Sweden");
                 currentCity = 0;
                 break;
             case cityB:
-                dialog.setMessage("Loading...");
-                dialog.show();
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 service.refreshWeather("Gothenburg, Sweden");
                 currentCity = 1;
                 break;
             case cityC:
-                dialog.setMessage("Loading...");
-                dialog.show();
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 service.refreshWeather("Malmo, Sweden");
                 currentCity = 2;
                 break;
             case cityD:
-                dialog.setMessage("Loading...");
-                dialog.show();
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 service.refreshWeather("Kiruna, Sweden");
                 currentCity = 3;
                 break;
@@ -162,23 +168,23 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
     public void refreshCurrent(){
         if (currentCity == 0){
-            dialog.setMessage("Loading...");
-            dialog.show();
+            pDialog.setMessage("Loading...");
+            pDialog.show();
             service.refreshWeather("Stockholm, Sweden");
         }
         else if (currentCity == 1){
-            dialog.setMessage("Loading...");
-            dialog.show();
+            pDialog.setMessage("Loading...");
+            pDialog.show();
             service.refreshWeather("Gothenburg, Sweden");
         }
         else if (currentCity == 2){
-            dialog.setMessage("Loading...");
-            dialog.show();
+            pDialog.setMessage("Loading...");
+            pDialog.show();
             service.refreshWeather("Malmo, Sweden");
         }
         else if (currentCity == 3){
-            dialog.setMessage("Loading...");
-            dialog.show();
+            pDialog.setMessage("Loading...");
+            pDialog.show();
             service.refreshWeather("Kiruna, Sweden");
         }
     }
@@ -224,4 +230,6 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
     public void onNothingSelected(AdapterView<?> parent) {
         return;
     }
+
+
 }
