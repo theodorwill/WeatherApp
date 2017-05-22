@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,18 +20,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.cba.TheoVaderApp.data.Channel;
 import com.example.cba.TheoVaderApp.data.Item;
 import com.example.cba.TheoVaderApp.service.WeatherServiceCallback;
 import com.example.cba.TheoVaderApp.service.YahooWeatherService;
+import java.sql.Time;
+import java.util.Date;
 
 public class WeatherList extends Activity implements WeatherServiceCallback, AdapterView.OnItemSelectedListener{
 
     private TextView temperatureTextView;
     private TextView conditionTextView;
     private TextView locationTextView;
+    private TextView dateTextView;
     private Button refreshCity;
     private Spinner citySelection;
     private ImageView weatherIconImageView;
@@ -53,6 +55,7 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         temperatureTextView = (TextView)findViewById(R.id.temperatureText);
         conditionTextView = (TextView)findViewById(R.id.conditionText);
         locationTextView = (TextView)findViewById(R.id.locationText);
+        dateTextView = (TextView)findViewById(R.id.dateView);
         citySelection = (Spinner)findViewById(R.id.cityName);
         refreshCity = (Button)findViewById(R.id.refreshButton);
         currLay = (RelativeLayout)findViewById(R.id.relLay);
@@ -75,17 +78,20 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
         refreshCity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                dialog.show();
                 refreshCurrent();
             }
         });
-
     }
 
     @Override
     public void serviceSuccess(Channel channel) {
         dialog.hide();
 
-        Long tsLong = System.currentTimeMillis()/(1000*60*60)%24;
+        int tsInt = new Time(System.currentTimeMillis()).getHours();
+        String ctString = java.text.DateFormat.getDateTimeInstance().format(new Date());
+
+        dateTextView.setText("Last updated: " + ctString);
 
         Item item = channel.getItem();
 
@@ -106,20 +112,19 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
         locationTextView.setText(service.getLocation());
 
-        if (temp >= 10 && tsLong < 19 && tsLong > 5){
+        if (temp >= 10 && tsInt < 19 && tsInt > 5){
             currLay.setBackgroundColor(Color.rgb(255, 152, 0));
         }
-        else if (temp < 10 && tsLong < 19 && tsLong > 5){
+        else if (temp < 10 && tsInt < 19 && tsInt > 5){
             currLay.setBackgroundColor(Color.rgb(3, 169, 244));
         }
-        else if (tsLong >= 19 || tsLong <= 5){
+        else if (tsInt >= 19 || tsInt <= 5){
             currLay.setBackgroundColor(Color.rgb(63, 81, 181));
         }
     }
 
     @Override
     public void serviceFailure(Exception exception) {
-        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
         networkCheck();
         return;
     }
@@ -157,15 +162,23 @@ public class WeatherList extends Activity implements WeatherServiceCallback, Ada
 
     public void refreshCurrent(){
         if (currentCity == 0){
+            dialog.setMessage("Loading...");
+            dialog.show();
             service.refreshWeather("Stockholm, Sweden");
         }
         else if (currentCity == 1){
+            dialog.setMessage("Loading...");
+            dialog.show();
             service.refreshWeather("Gothenburg, Sweden");
         }
         else if (currentCity == 2){
+            dialog.setMessage("Loading...");
+            dialog.show();
             service.refreshWeather("Malmo, Sweden");
         }
         else if (currentCity == 3){
+            dialog.setMessage("Loading...");
+            dialog.show();
             service.refreshWeather("Kiruna, Sweden");
         }
     }

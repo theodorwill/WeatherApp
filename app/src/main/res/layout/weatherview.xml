@@ -75,4 +75,14 @@
         android:layout_below="@+id/locationText"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/dateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#fafafa"
+        android:text=""
+        android:layout_above="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

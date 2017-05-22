@@ -33,7 +33,7 @@ public class SplashScreen extends Activity {
             checkBuilder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
-                    //Restart The Activity
+
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
